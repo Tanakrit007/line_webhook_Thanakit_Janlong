@@ -1,26 +1,29 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { WebhookClint, Payloand } = require("dialogflow-fulfillment");
+const { WebhookClient, Payload } = require("dialogflow-fulfillment");
 const port = 4000;
 
-//create sever
+//create server
 const app = express();
 
 //middleware
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send("<h1>Welcome, this is a webhook for Line Chatbot</h1>");
+  res.send("<h1>Welcome, this is a webhook for Line Chatbot !!!</h1>");
 });
 
 app.post("/webhook", (req, res) => {
   //create webhook client
-  const agent = new WebhookClint({
+  const agent = new WebhookClient({
     request: req,
     response: res,
   });
-  console.log("Dialogflow Request headers: " + JSON.stringify(request.headers));
-  console.log("Dialogflow Request body: " + JSON.stringify(request.body));
+
+  // console.log(
+  //     "Dialogflow Request headers: " + JSON.stringify(req.headers)
+  // );
+  // console.log("Dialogflow Request body: " + JSON.stringify(req.body));
 
   function welcome(agent) {
     agent.add(`Welcome to my agent!`);
@@ -35,6 +38,7 @@ app.post("/webhook", (req, res) => {
     let weight = agent.parameters.weight;
     let height = agent.parameters.height / 100;
     let bmi = (weight / (height * height)).toFixed(2);
+
     let result = "ขออภัย หนูไม่เข้าใจ";
 
     if (bmi < 18.5) {
@@ -46,23 +50,32 @@ app.post("/webhook", (req, res) => {
     } else if ((bmi >= 25.8) & (bmi <= 29.9)) {
       result = "คุณอ้วนละ ออกกำลังกายหน่อยนะ";
     } else if (bmi > 30) {
-      result = "คุณอ้วนเกินไปละ ออกกําลังกายเหอะ";
+      result = "คุณอ้วนเกินไปละ หาหมอเหอะ";
     }
-    const fliexMessage = {
+    const flexMessage = {
       type: "flex",
       altText: "Flex Message",
       contents: {
         type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "BMI Calculation Result",
+              weight: "bold",
+              size: "lg",
+              align: "center",
+            },
+          ],
+        },
         hero: {
           type: "image",
-          url: "https://lh3.googleusercontent.com/proxy/zzlo6uR-Sn3i_INjgmmLnFMxTdnw713WhBDRcZbz1heMVPmqpnOlFPQgiwt_U1li9ZniF0K-VsH61q3ApIGpUJiWGjPnG8q3cDlXEo6S1lQ",
+          url: "https://lirp.cdn-website.com/69c0b277/dms3rep/multi/opt/BMI+levels-1920w.jpg",
           size: "full",
           aspectRatio: "20:13",
           aspectMode: "cover",
-          action: {
-            type: "uri",
-            uri: "https://line.me/",
-          },
         },
         body: {
           type: "box",
@@ -70,98 +83,76 @@ app.post("/webhook", (req, res) => {
           contents: [
             {
               type: "text",
-              text: "น้ำหนักส่วนสูงคุณ",
+              text: "Your BMI Result",
               weight: "bold",
-              size: "xl",
+              size: "md",
+              margin: "md",
             },
             {
-              type: "box",
-              layout: "vertical",
+              type: "text",
+              text: "Height: " + height * 100 + " cm",
+              size: "sm",
+              margin: "sm",
+            },
+            {
+              type: "text",
+              text: "Weight: " + weight + " kg",
+              size: "sm",
+              margin: "sm",
+            },
+            {
+              type: "separator",
               margin: "lg",
-              spacing: "sm",
-              contents: [
-                {
-                  type: "box",
-                  layout: "baseline",
-                  spacing: "sm",
-                  contents: [
-                    {
-                      type: "text",
-                      text: "น้ำหนักคุณ 110",
-                      color: "#aaaaaa",
-                      size: "sm",
-                      flex: 1,
-                    },
-                  ],
-                },
-                {
-                  type: "box",
-                  layout: "baseline",
-                  spacing: "sm",
-                  contents: [
-                    {
-                      type: "text",
-                      text: "ส่วนสูงคุณ 165",
-                      color: "#aaaaaa",
-                      size: "sm",
-                      flex: 1,
-                    },
-                  ],
-                },
-                {
-                  type: "box",
-                  layout: "vertical",
-                  contents: [
-                    {
-                      type: "text",
-                      text: "BMI:38.5",
-                      size: "xxl",
-                    },
-                  ],
-                },
-              ],
+            },
+            {
+              type: "text",
+              text: "BMI: " + bmi,
+              weight: "bold",
+              size: "xl",
+              align: "center",
+              margin: "lg",
+              color: "#00b900",
+            },
+            {
+              type: "text",
+              text: result,
+              align: "center",
+              size: "sm",
+              margin: "md",
             },
           ],
         },
         footer: {
           type: "box",
           layout: "vertical",
-          spacing: "sm",
           contents: [
             {
               type: "button",
-              style: "link",
-              height: "sm",
               action: {
                 type: "uri",
-                label: "ดูเพิ่มเติม",
-                uri: "https://line.me/",
+                label: "รายละเอียดเพิ่มเติม",
+                uri: "https://samitivejchinatown.com/th/article/health/BMI-calculator",
               },
-            },
-            {
-              type: "box",
-              layout: "vertical",
-              contents: [],
-              margin: "sm",
+              style: "primary",
+              color: "#1DB446",
             },
           ],
-          flex: 0,
         },
       },
     };
 
-    let Payloand = new playloand("LINE", fliexMessage, { sendAsMessage: true });
-    //agent.add(result);
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
+    // agent.add(result);
   }
 
   let intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("Default Fallback Intent", fallback);
-
   intentMap.set("BMI - custom - yes", bodyMassIndex);
-
   agent.handleRequest(intentMap);
 });
+
 app.listen(port, () => {
   console.log("Server is running at http://localhost:" + port);
 });
