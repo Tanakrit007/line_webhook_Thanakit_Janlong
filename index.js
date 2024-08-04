@@ -140,45 +140,214 @@ app.post("/webhook", (req, res) => {
     agent.add(payload);
   }
 
-  function calculatorsquareArea(agent) {
-    try {
-      let width = agent.parameters.width;
-      let length = agent.parameters.length;
+  function calculatesquareArea(agent) {
+    let length = agent.parameters.length;
+    let width = agent.parameters.width;
+    let area = length * width;
 
-      if (!width || !length) {
-        agent.add("กรุณาระบุกว้างและยาวของรูปสี่เหลี่ยม.");
-        return;
-      }
+    const flexMessage = {
+        "type": "flex",
+        "altText": "Flex Message",
+        "contents": {
+            "type": "bubble",
+            "header": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "square Area Calculation Result",
+                        "weight": "bold",
+                        "size": "lg",
+                        "align": "center"
+                    }
+                ]
+            },
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "Your square Area Result",
+                        "weight": "bold",
+                        "size": "md",
+                        "margin": "md"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Length: " + length + " units",
+                        "size": "sm",
+                        "margin": "sm"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Width: " + width + " units",
+                        "size": "sm",
+                        "margin": "sm"
+                    },
+                    {
+                        "type": "separator",
+                        "margin": "lg"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Area: " + area + " square units",
+                        "weight": "bold",
+                        "size": "xl",
+                        "align": "center",
+                        "margin": "lg",
+                        "color": "#00b900"
+                    }
+                ]
+            }
+        }
+    };
 
-      let result = width * length;
-      console.log(width, length, result);
-      agent.add(
-        "พื้นที่รูปสี่เหลี่ยมขนาด กว้าง " +
-          width +
-          " ซม. ยาว " +
-          length +
-          " ซม. = " +
-          result +
-          " ตร.ซม."
-      );
-    } catch (error) {
-      console.error("Error calculating square area:", error);
-      agent.add("เกิดข้อผิดพลาดในการคำนวณพื้นที่ กรุณาลองใหม่.");
-    }
-  }
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
+}
 
-  let intentMap = new Map();
-  intentMap.set("Default Welcome Intent", welcome);
-  intentMap.set("Default Fallback Intent", fallback);
-  intentMap.set("BMI - custom - yes", bodyMassIndex);
-  intentMap.set("area - square - custom - yes", calculatorsquareArea);
+function calculateCircleArea(agent) {
+    let radius = agent.parameters.radius;
+    let area = (Math.PI * radius * radius).toFixed(2);
 
-  agent.handleRequest(intentMap).catch((error) => {
-    console.error("Error handling the request:", error);
-    res.status(500).send("Internal Server Error");
-  });
+    const flexMessage = {
+        "type": "flex",
+        "altText": "Flex Message",
+        "contents": {
+            "type": "bubble",
+            "header": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "Circle Area Calculation Result",
+                        "weight": "bold",
+                        "size": "lg",
+                        "align": "center"
+                    }
+                ]
+            },
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "Your Circle Area Result",
+                        "weight": "bold",
+                        "size": "md",
+                        "margin": "md"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Radius: " + radius + " units",
+                        "size": "sm",
+                        "margin": "sm"
+                    },
+                    {
+                        "type": "separator",
+                        "margin": "lg"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Area: " + area + " square units",
+                        "weight": "bold",
+                        "size": "xl",
+                        "align": "center",
+                        "margin": "lg",
+                        "color": "#00b900"
+                    }
+                ]
+            }
+        }
+    };
+
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
+}
+
+function calculateTriangleArea(agent) {
+    let base = agent.parameters.base;
+    let height = agent.parameters.height;
+    let area = (0.5 * base * height).toFixed(2);
+
+    const flexMessage = {
+        "type": "flex",
+        "altText": "Flex Message",
+        "contents": {
+            "type": "bubble",
+            "header": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "Triangle Area Calculation Result",
+                        "weight": "bold",
+                        "size": "lg",
+                        "align": "center"
+                    }
+                ]
+            },
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "Your Triangle Area Result",
+                        "weight": "bold",
+                        "size": "md",
+                        "margin": "md"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Base: " + base + " units",
+                        "size": "sm",
+                        "margin": "sm"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Height: " + height + " units",
+                        "size": "sm",
+                        "margin": "sm"
+                    },
+                    {
+                        "type": "separator",
+                        "margin": "lg"
+                    },
+                    {
+                        "type": "text",
+                        "text": "Area: " + area + " square units",
+                        "weight": "bold",
+                        "size": "xl",
+                        "align": "center",
+                        "margin": "lg",
+                        "color": "#00b900"
+                    }
+                ]
+            }
+        }
+    };
+
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
+}
+
+let intentMap = new Map();
+intentMap.set("Default Welcome Intent", welcome);
+intentMap.set("Default Fallback Intent", fallback);
+intentMap.set("BMI - custom - yes", bodyMassIndex);
+intentMap.set("Calculate Rectangle Area", calculateRectangleArea);
+intentMap.set("Calculate Circle Area", calculateCircleArea);
+intentMap.set("Calculate Triangle Area", calculateTriangleArea);
+
+agent.handleRequest(intentMap);
 });
 
 app.listen(port, () => {
-  console.log("Server is running at http://localhost:" + port);
+console.log("Server is running at http://localhost:" + port);
 });
