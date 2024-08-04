@@ -347,7 +347,7 @@ let intentMap = new Map();
 intentMap.set("Default Welcome Intent", welcome);
 intentMap.set("Default Fallback Intent", fallback);
 intentMap.set("BMI - custom - yes", bodyMassIndex);
-intentMap.set("Calculate Rectangle Area", calculateRectangleArea);
+intentMap.set("Calculate square Area", calculatesquareArea);
 intentMap.set("Calculate Circle Area", calculateCircleArea);
 intentMap.set("Calculate Triangle Area", calculateTriangleArea);
 
