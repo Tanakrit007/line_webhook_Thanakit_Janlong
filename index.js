@@ -149,10 +149,16 @@ app.post("/webhook", (req, res) => {
   function calculatorsquareArea(agent) {
     let width = agent.parameters.width;
     let length = agent.parameters.length;
-    let result = width * length;
-    console.log(width, length, result)
-    agent.add("พื้นที่รูปสี่เหลี่ยมขนาด กว้าง" + width + "ซม. ยาว " + length + " = " + result + " ตร.ซม.")
+  
+    if (width && length) {
+      let result = width * length;
+      console.log("Width:", width, "Length:", length, "Result:", result);
+      agent.add("พื้นที่รูปสี่เหลี่ยมขนาด กว้าง " + width + " ซม. ยาว " + length + " ซม. = " + result + " ตร.ซม.");
+    } else {
+      agent.add("กรุณาระบุกว้างและยาวของรูปสี่เหลี่ยม.");
+    }
   }
+  
 
   let intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
