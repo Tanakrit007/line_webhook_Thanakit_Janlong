@@ -20,11 +20,6 @@ app.post("/webhook", (req, res) => {
     response: res,
   });
 
-  // console.log(
-  //     "Dialogflow Request headers: " + JSON.stringify(req.headers)
-  // );
-  // console.log("Dialogflow Request body: " + JSON.stringify(req.body));
-
   function welcome(agent) {
     agent.add(`Welcome to my agent!`);
   }
@@ -143,23 +138,45 @@ app.post("/webhook", (req, res) => {
 
     let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
     agent.add(payload);
-    // agent.add(result);
   }
 
   function calculatorsquareArea(agent) {
-    let width = agent.parameters.width;
-    let length = agent.parameters.length;
-    let result = width * length;
-    console.log(width, length, result)
-    agent.add("พื้นที่รูปสี่เหลี่ยมขนาด กว้าง" + width + "ซม. ยาว " + length + " = " + result + " ตร.ซม.")
+    try {
+      let width = agent.parameters.width;
+      let length = agent.parameters.length;
+
+      if (!width || !length) {
+        agent.add("กรุณาระบุกว้างและยาวของรูปสี่เหลี่ยม.");
+        return;
+      }
+
+      let result = width * length;
+      console.log(width, length, result);
+      agent.add(
+        "พื้นที่รูปสี่เหลี่ยมขนาด กว้าง " +
+          width +
+          " ซม. ยาว " +
+          length +
+          " ซม. = " +
+          result +
+          " ตร.ซม."
+      );
+    } catch (error) {
+      console.error("Error calculating square area:", error);
+      agent.add("เกิดข้อผิดพลาดในการคำนวณพื้นที่ กรุณาลองใหม่.");
+    }
   }
 
   let intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("Default Fallback Intent", fallback);
   intentMap.set("BMI - custom - yes", bodyMassIndex);
-  intentMap.set("area - square - custom - yes ", calculatorsquareArea);
-  agent.handleRequest(intentMap);
+  intentMap.set("area - square - custom - yes", calculatorsquareArea);
+
+  agent.handleRequest(intentMap).catch((error) => {
+    console.error("Error handling the request:", error);
+    res.status(500).send("Internal Server Error");
+  });
 });
 
 app.listen(port, () => {
