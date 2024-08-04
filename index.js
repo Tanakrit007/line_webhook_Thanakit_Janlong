@@ -143,70 +143,76 @@ app.post("/webhook", (req, res) => {
   function calculatesquareArea(agent) {
     let length = agent.parameters.length;
     let width = agent.parameters.width;
+
+    if (!length || !width) {
+      agent.add("กรุณาระบุกว้างและยาวของรูปสี่เหลี่ยม.");
+      return;
+    }
+
     let area = length * width;
 
     const flexMessage = {
-        "type": "flex",
-        "altText": "Flex Message",
-        "contents": {
-            "type": "bubble",
-            "header": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "text",
-                        "text": "square Area Calculation Result",
-                        "weight": "bold",
-                        "size": "lg",
-                        "align": "center"
-                    }
-                ]
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "Square Area Calculation Result",
+              weight: "bold",
+              size: "lg",
+              align: "center",
             },
-            "body": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "text",
-                        "text": "Your square Area Result",
-                        "weight": "bold",
-                        "size": "md",
-                        "margin": "md"
-                    },
-                    {
-                        "type": "text",
-                        "text": "Length: " + length + " units",
-                        "size": "sm",
-                        "margin": "sm"
-                    },
-                    {
-                        "type": "text",
-                        "text": "Width: " + width + " units",
-                        "size": "sm",
-                        "margin": "sm"
-                    },
-                    {
-                        "type": "separator",
-                        "margin": "lg"
-                    },
-                    {
-                        "type": "text",
-                        "text": "Area: " + area + " square units",
-                        "weight": "bold",
-                        "size": "xl",
-                        "align": "center",
-                        "margin": "lg",
-                        "color": "#00b900"
-                    }
-                ]
-            }
-        }
+          ],
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "Your Square Area Result",
+              weight: "bold",
+              size: "md",
+              margin: "md",
+            },
+            {
+              type: "text",
+              text: "Length: " + length + " units",
+              size: "sm",
+              margin: "sm",
+            },
+            {
+              type: "text",
+              text: "Width: " + width + " units",
+              size: "sm",
+              margin: "sm",
+            },
+            {
+              type: "separator",
+              margin: "lg",
+            },
+            {
+              type: "text",
+              text: "Area: " + area + " square units",
+              weight: "bold",
+              size: "xl",
+              align: "center",
+              margin: "lg",
+              color: "#00b900",
+            },
+          ],
+        },
+      },
     };
 
     let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
     agent.add(payload);
-}
+  }
 
 function calculateCircleArea(agent) {
     let radius = agent.parameters.radius;
