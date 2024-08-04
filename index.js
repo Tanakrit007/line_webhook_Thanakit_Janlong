@@ -146,7 +146,7 @@ app.post("/webhook", (req, res) => {
     // agent.add(result);
   }
 
-  function calculatorRectangleArea(agent) {
+  function calculatorsquareArea(agent) {
     let width = agent.parameters.width;
     let length = agent.parameters.length;
     let result = width * length;
@@ -158,7 +158,7 @@ app.post("/webhook", (req, res) => {
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("Default Fallback Intent", fallback);
   intentMap.set("BMI - custom - yes", bodyMassIndex);
-  intentMap.set("area - rectangle - custom - yes ", calculatorRectangleArea);
+  intentMap.set("area - square - custom - yes ", calculatorsquareArea);
   agent.handleRequest(intentMap);
 });
 
